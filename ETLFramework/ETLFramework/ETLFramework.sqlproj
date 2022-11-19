@@ -67,15 +67,18 @@
   <ItemGroup>
     <Build Include="ETL\Tables\BatchLog.sql" />
     <Build Include="ETL\Tables\TableLoadReport.sql" />
-    <Build Include="ETL\Tables\TablesObjectsCreation.sql" />
-    <Build Include="ETL\Tables\DataLoadScriptsCreation.sql" />
     <Build Include="Security\sa1.sql" />
     <Build Include="Security\sa2.sql" />
     <Build Include="dbo\Stored Procedures\spr_DimDate_Archive.sql" />
     <Build Include="dbo\Stored Procedures\sp_generate_merge_Archive.sql" />
     <Build Include="dbo\Stored Procedures\1_generateTableObjects.sql" />
     <Build Include="dbo\Stored Procedures\spr_Generate_TablesAndLoadQuery_Archive.sql" />
-    <Build Include="dbo\Stored Procedures\2_LandingGenerateDataLoadQueries.sql" />
     <Build Include="Security\ETL.sql" />
+    <Build Include="ETL\Tables\SourceTablesDataLoadDetails.sql" />
+    <Build Include="dbo\Stored Procedures\spr_BatchStart.sql" />
+    <Build Include="dbo\Stored Procedures\LandingGenerateDataLoadQueries_archive.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SqlSchemaCompare1.scmp" />
   </ItemGroup>
 </Project>

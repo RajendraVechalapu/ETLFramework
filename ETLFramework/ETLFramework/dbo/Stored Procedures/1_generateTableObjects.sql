@@ -2,43 +2,52 @@
 as
 BEGIN
 --Run this script in Target Database, it will create table scripts
-DECLARE @ID int, @SourceQuery varchar(max),@LandingTargetTable varchar(max),@TargetTable varchar(max),@TargetTableLandingCreationQuery varchar(max),@TargetTableCreationQuery varchar(max)
+DECLARE @ID int, @SourceServer varchar(max),@SourceTable varchar(max),@SourceTableColumnNames varchar(max)
+,@LandingTargetTable varchar(max),@TargetTable varchar(max),@HighWaterMarkColumn varchar(max)
 
-set @ID=(SELECT MIN(ID) FROM ETLFramework.ETL.TablesObjectsCreation)
+declare @TargetTableLandingCreationQuery varchar(max),@TargetTableCreationQuery varchar(max)
+
+set @ID=(SELECT MIN(ID) FROM ETLFramework.ETL.SourceTablesDataLoadDetails)
 
 WHILE (@ID IS NOT NULL)
 BEGIN
 
 SELECT 
-@SourceQuery=e.SourceQuery,@LandingTargetTable=e.LandingTargetTable,@TargetTable=e.TargetTable
-FROM ETLFramework.ETL.TablesObjectsCreation e WHERE ID=@ID
+@SourceServer=e.SourceServer,@SourceTable=e.SourceTable,@SourceTableColumnNames=e.SourceTableColumnNames
+,@LandingTargetTable=e.LandingTargetTable,@TargetTable=e.TargetTable,@HighWaterMarkColumn=e.HighWaterMarkColumn
+FROM ETLFramework.ETL.SourceTablesDataLoadDetails e WHERE ID=@ID
 
 --SELECT @SourceQuery,@LandingTargetTable,@TargetTable
 
-declare @dropTableIfExists varchar(max)='IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'''+@TargetTable+''') AND type in (N''U''))
-DROP TABLE '+@TargetTable+''
-
-print @dropTableIfExists
---exec(@dropTableIfExists)
-
-set @dropTableIfExists ='IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'''+@LandingTargetTable+''') AND type in (N''U''))
+declare @dropLandingTargetTableIfExists varchar(max)='IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'''+@LandingTargetTable+''') AND type in (N''U''))
 DROP TABLE '+@LandingTargetTable+''
 
-print @dropTableIfExists
+declare @dropTargetTableIfExists varchar(max)='IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'''+@TargetTable+''') AND type in (N''U''))
+DROP TABLE '+@TargetTable+''
+
+print ''
+print @dropLandingTargetTableIfExists
+print ''
+print @dropTargetTableIfExists
+
+print ''
 --exec(@dropTableIfExists)
 
 
---Table Creation, Landing, Target Tables
-set @TargetTableLandingCreationQuery ='SELECT src.*, getdate() as CreatedAsAt, getdate() ModifiedAsAt,null as ETLBatchLogId into  '+@LandingTargetTable+' FROM('+@SourceQuery+' ) src where 1=0'
-print @TargetTableLandingCreationQuery
+SET @TargetTableLandingCreationQuery='SELECT '+replace(@SourceTableColumnNames,isnull(@HighWaterMarkColumn,''),'cast('+isnull(@HighWaterMarkColumn,'')+' as varbinary(8)) '+isnull(@HighWaterMarkColumn,'')+' ')+', 
+	getdate() as CreatedAsAt, getdate() ModifiedAsAt,null as ETLBatchLogId INTO '+@LandingTargetTable+' FROM '+@SourceServer+'.'+@SourceTable+' where 1=0'
 
-set @TargetTableCreationQuery ='SELECT src.*, getdate() as CreatedAt, getdate() ModifiedAt,null as ETLBatchLogId into  '+@TargetTable+' FROM('+@SourceQuery+') src where 1=0'
+SET @TargetTableCreationQuery='SELECT '+replace(@SourceTableColumnNames,isnull(@HighWaterMarkColumn,''),'cast('+isnull(@HighWaterMarkColumn,'')+' as varbinary(8)) '+isnull(@HighWaterMarkColumn,'')+' ')+', 
+	getdate() as CreatedAsAt, getdate() ModifiedAsAt,null as ETLBatchLogId INTO '+@TargetTable+' FROM '+@SourceServer+'.'+@SourceTable+' where 1=0'
+
+print @TargetTableLandingCreationQuery
+print ''
 print @TargetTableCreationQuery
 --exec(@TargetTableLandingCreationQuery)
 --exec(@TargetTableCreationQuery)
 	
 
-set @ID=(SELECT MIN(ID) FROM ETLFramework.ETL.TablesObjectsCreation WHERE ID > @ID)
+set @ID=(SELECT MIN(ID) FROM ETLFramework.ETL.SourceTablesDataLoadDetails WHERE ID > @ID)
 END
 
 
