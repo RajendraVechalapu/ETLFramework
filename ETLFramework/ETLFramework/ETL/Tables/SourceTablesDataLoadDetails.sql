@@ -7,6 +7,10 @@
     [TargetTable]            VARCHAR (150) NOT NULL,
     [DataLoadType]           VARCHAR (150) NOT NULL,
     [HighWaterMarkColumn]    VARCHAR (150) NULL,
+    [AutoIdentityColumn]     VARCHAR (150) NULL,
+    [KeyColumns]             VARCHAR (150) NULL,
     CONSTRAINT [PK_TablesObjectsCreation] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
+
+
 
