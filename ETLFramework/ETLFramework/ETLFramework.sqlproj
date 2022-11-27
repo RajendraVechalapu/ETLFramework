@@ -68,8 +68,6 @@
   <ItemGroup>
     <Build Include="ETL\Tables\BatchLog.sql" />
     <Build Include="ETL\Tables\TableLoadReport.sql" />
-    <Build Include="Security\sa1.sql" />
-    <Build Include="Security\sa2.sql" />
     <Build Include="Security\ETL.sql" />
     <Build Include="ETL\Tables\SourceTablesDataLoadDetails.sql" />
     <Build Include="dbo\Stored Procedures\spr_BatchStart.sql" />
