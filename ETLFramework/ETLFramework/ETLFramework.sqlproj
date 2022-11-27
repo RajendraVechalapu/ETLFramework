@@ -63,6 +63,7 @@
     <Folder Include="Security\" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="ETL\Tables\BatchLog.sql" />
@@ -75,6 +76,11 @@
     <Build Include="dbo\Stored Procedures\sp_generate_merge.sql" />
     <Build Include="dbo\Stored Procedures\2_spr_GenerateDataLoadQueries.sql" />
     <Build Include="dbo\Stored Procedures\1_spr_generateTableObjects.sql" />
+    <Build Include="dbo\Tables\TableLoadReporttest.sql" />
+    <Build Include="dbo\Stored Procedures\spr_InsertUpdateSourceDataLoadDetails.sql" />
+    <Build Include="dbo\Stored Procedures\spr_getColumns.sql" />
+    <Build Include="dbo\Stored Procedures\spr_fetch_TableQuery.sql" />
+    <Build Include="dbo\Stored Procedures\spr_deleteFromSourceDataLoadDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare1.scmp" />
