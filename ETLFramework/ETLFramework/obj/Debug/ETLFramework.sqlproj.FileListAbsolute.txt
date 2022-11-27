@@ -1,8 +1,9 @@
 C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\bin\Debug\ETLFramework.dacpac
-C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\obj\Debug\ETLFramework.sqlproj.AssemblyReference.cache
 C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\obj\Debug\Model.xml
 C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\obj\Debug\refactor.xml
 C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\obj\Debug\postdeploy.sql
 C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\obj\Debug\predeploy.sql
 C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\obj\Debug\ETLFramework.dll
 C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\obj\Debug\ETLFramework.pdb
+C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\bin\Debug\ETLFramework.dll
+C:\Users\vrsan\Documents\Learning\ETLFramework\ETLFramework\ETLFramework\bin\Debug\ETLFramework.pdb

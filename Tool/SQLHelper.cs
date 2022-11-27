@@ -131,7 +131,7 @@ namespace BIFramework
             {
                 TableName = TableName.Replace("[","");
                 TableName = TableName.Replace("]", "");
-                string sqlqueryText = "SELECT CASE WHEN DATA_TYPE='timestamp' THEN 'CAST(['+COLUMN_NAME+'] AS varbinary(8)) as ['+COLUMN_NAME+']'  ELSE 	'['+COLUMN_NAME+']' END ColumnName " +
+                string sqlqueryText = "SELECT CASE WHEN DATA_TYPE='timestamp' THEN 'CAST(['+COLUMN_NAME+'] AS varbinary(8)) as ['+COLUMN_NAME+']' WHEN DATA_TYPE='xml' THEN 'CAST(['+COLUMN_NAME+'] AS xml) as ['+COLUMN_NAME+']'  ELSE 	'['+COLUMN_NAME+']' END ColumnName " +
                " FROM "+ LinkedServerName +"."+DatabaseName+".INFORMATION_SCHEMA.COLUMNS " +
                " WHERE [TABLE_SCHEMA]+'.'+[TABLE_NAME]='"+TableName+"' ORDER BY ORDINAL_POSITION";
 

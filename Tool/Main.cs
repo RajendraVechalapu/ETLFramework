@@ -344,13 +344,13 @@ namespace SQL_Perf_Light
                             if (i==1)
                             {
                                 sbSelect.AppendLine("" + row["ColumnName"].ToString());
-                        sbSourceTableColumnNames.AppendLine("" + row["ColumnName"].ToString());
+                                sbSourceTableColumnNames.AppendLine("" + row["ColumnName"].ToString());
                                 
                             }
                             else
                             {
                                 sbSelect.AppendLine("," + row["ColumnName"].ToString());
-                        sbSourceTableColumnNames.AppendLine("," + row["ColumnName"].ToString());
+                                sbSourceTableColumnNames.AppendLine("," + row["ColumnName"].ToString());
                                 
                             }
 
