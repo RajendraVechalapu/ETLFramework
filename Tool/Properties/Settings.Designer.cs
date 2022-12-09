@@ -25,7 +25,7 @@ namespace BIFramework.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".")]
+        [global::System.Configuration.DefaultSettingValueAttribute("rajsqlserver2022.database.windows.net")]
         public string target_sql_server {
             get {
                 return ((string)(this["target_sql_server"]));
@@ -37,7 +37,7 @@ namespace BIFramework.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("master")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Landing")]
         public string target_sql_db {
             get {
                 return ((string)(this["target_sql_db"]));
@@ -49,7 +49,7 @@ namespace BIFramework.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("raj")]
         public string target_username {
             get {
                 return ((string)(this["target_username"]));
@@ -61,7 +61,7 @@ namespace BIFramework.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("zaq1ZAQ!")]
         public string target_password {
             get {
                 return ((string)(this["target_password"]));
@@ -71,13 +71,63 @@ namespace BIFramework.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.;Initial Catalog=sqlperftool;Integrated Security=True")]
-        public string sqlperftoolConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("LAPTOP-NI0AKHN4")]
+        public string source_sql_server {
             get {
-                return ((string)(this["sqlperftoolConnectionString"]));
+                return ((string)(this["source_sql_server"]));
+            }
+            set {
+                this["source_sql_server"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("sourcedb")]
+        public string source_sql_db {
+            get {
+                return ((string)(this["source_sql_db"]));
+            }
+            set {
+                this["source_sql_db"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("raj")]
+        public string source_username {
+            get {
+                return ((string)(this["source_username"]));
+            }
+            set {
+                this["source_username"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("zaq1ZAQ!")]
+        public string source_password {
+            get {
+                return ((string)(this["source_password"]));
+            }
+            set {
+                this["source_password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("etlframework")]
+        public string target_sql_db_etlframework {
+            get {
+                return ((string)(this["target_sql_db_etlframework"]));
+            }
+            set {
+                this["target_sql_db_etlframework"] = value;
             }
         }
     }

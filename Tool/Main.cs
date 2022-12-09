@@ -34,73 +34,73 @@ namespace SQL_Perf_Light
         
 
         
-        private string getQuery(string queryText)
-        {
-            try
-            {
+        //private string getQuery(string queryText)
+        //{
+        //    try
+        //    {
 
             
-            //var dsInfo = SQLHelper.getDataSet(queryText,"sqlperftool",false);
-            var dsInfo = SQLHelper.getDataSet(queryText,"sqlperftool",false);
+        //    //var dsInfo = SQLHelper.getDataSet(queryText,"sqlperftool",false);
+        //    var dsInfo = SQLHelper.getDataSet(queryText,"sqlperftool",false);
 
-            foreach (DataRow item in dsInfo.Tables[0].Rows)
-            {
-                return item[0].ToString();
-            }
-            return "";
-            }
-            catch (Exception ex)
-            {
+        //    foreach (DataRow item in dsInfo.Tables[0].Rows)
+        //    {
+        //        return item[0].ToString();
+        //    }
+        //    return "";
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                MessageBox.Show(ex.Message);
-            }
-            return "";
-        }
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //    return "";
+        //}
       
-        private void showQuery(string name,string queryText) {
-            Clipboard.SetText(name + ":"+queryText);
-        }
+        //private void showQuery(string name,string queryText) {
+        //    Clipboard.SetText(name + ":"+queryText);
+        //}
         
-        private void ExportToExcel(DataSet dsInfo,string sheetname)
-        {
-            try
-            {
-                //buttonname = buttonname + "" + DateTime.Now.ToShortDateString();
-                sheetname = sheetname.Replace(@"[", "").Replace(@"\", "").Replace(@"/", "").Replace(@"?", "").Replace(@"]", "").Replace(@"*", "");
-                sheetname = sheetname.Replace(" ","");
-                if (sheetname.Length > 20)
-                {
-                    sheetname = sheetname.Substring(0, Math.Min(sheetname.Length, 20));
-                }
-                sheetname = sheetname + long.Parse(DateTime.Now.ToString("ddHHmmss"));
-                //Match m = Regex.Match(buttonname, @"[\[/?]*]");
-                //bool nameIsValid = (m.Success || (string.IsNullOrEmpty(buttonname)) || (buttonname.Length > 31)) ? false : true;
-                //if (nameIsValid == false)
-                //{
-                //    MessageBox.Show("Invalid worksheet name:" + buttonname);
-                //    return;
-                //}
+        //private void ExportToExcel(DataSet dsInfo,string sheetname)
+        //{
+        //    try
+        //    {
+        //        //buttonname = buttonname + "" + DateTime.Now.ToShortDateString();
+        //        sheetname = sheetname.Replace(@"[", "").Replace(@"\", "").Replace(@"/", "").Replace(@"?", "").Replace(@"]", "").Replace(@"*", "");
+        //        sheetname = sheetname.Replace(" ","");
+        //        if (sheetname.Length > 20)
+        //        {
+        //            sheetname = sheetname.Substring(0, Math.Min(sheetname.Length, 20));
+        //        }
+        //        sheetname = sheetname + long.Parse(DateTime.Now.ToString("ddHHmmss"));
+        //        //Match m = Regex.Match(buttonname, @"[\[/?]*]");
+        //        //bool nameIsValid = (m.Success || (string.IsNullOrEmpty(buttonname)) || (buttonname.Length > 31)) ? false : true;
+        //        //if (nameIsValid == false)
+        //        //{
+        //        //    MessageBox.Show("Invalid worksheet name:" + buttonname);
+        //        //    return;
+        //        //}
 
-                string filepath = AppDomain.CurrentDomain.BaseDirectory + " " + sheetname + ".xlsx";
-                XLWorkbook wb = new XLWorkbook();
+        //        string filepath = AppDomain.CurrentDomain.BaseDirectory + " " + sheetname + ".xlsx";
+        //        XLWorkbook wb = new XLWorkbook();
 
-                foreach (DataTable table in dsInfo.Tables)
-                {
+        //        foreach (DataTable table in dsInfo.Tables)
+        //        {
 
 
-                    wb.Worksheets.Add(table, sheetname);
-                }
-                wb.SaveAs(filepath);
-                OpenExcel(filepath);
-            }
-            catch (Exception ex)
-            {
+        //            wb.Worksheets.Add(table, sheetname);
+        //        }
+        //        wb.SaveAs(filepath);
+        //        OpenExcel(filepath);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                MessageBox.Show(ex.Message);
-            }
+        //        MessageBox.Show(ex.Message);
+        //    }
             
 
-        }
+        //}
         private void OpenExcel(string path)
         {
             System.Diagnostics.Process.Start(path);
@@ -110,6 +110,7 @@ namespace SQL_Perf_Light
         {
             try
             {
+                SQLHelper.InitializeIcons();
                 InitialPageLoadwithAllData();
                 fetch_DataLoadDetails(nodetextselect);
             }
@@ -126,14 +127,9 @@ namespace SQL_Perf_Light
 
             try
             {
-                dsInfo = SQLHelper.getDataSet(SQLHelper.fetch_user_databases, "master",true);
+               
 
-                foreach (DataRow item in dsInfo.Tables[0].Rows)
-                {
-                    string dbname = item[0].ToString();
-
-                    cmbAllDatabases.Items.Add(dbname);
-                }
+                cmbAllDatabases.Items.Add(SQLHelper.source_sql_db);
 
                 if (cmbAllDatabases.Items.Count >= 1)
                 {
@@ -215,10 +211,10 @@ namespace SQL_Perf_Light
 
             
                 treeViewSQL.Nodes.Clear();
-                string dbname = "" + cmbAllDatabases.SelectedItem.ToString() + "";
-                string TableQuery = "SELECT '['+TABLE_SCHEMA+'].['+TABLE_NAME+']' TableName FROM [" + dbname + "].[INFORMATION_SCHEMA].[TABLES] ORDER BY 1";
+                
+                string sourceTablesQuery = "SELECT '['+TABLE_SCHEMA+'].['+TABLE_NAME+']' TableName FROM [INFORMATION_SCHEMA].[TABLES] ORDER BY 1";
 
-            DataSet dsGetTables = SQLHelper.getDataSet(TableQuery, dbname , false);
+            DataSet dsGetTables = SQLHelper.getDataSet(sourceTablesQuery, false);
             //DataSet dsalltables = SQLHelper.getDataSet(SQLHelper.fetch_user_all_tables_bydatabase, cmbAllDatabases.SelectedItem.ToString(),true);
             foreach (DataRow dr in dsGetTables.Tables[0].Rows)
             {
@@ -305,16 +301,18 @@ namespace SQL_Perf_Light
         void fetch_DataLoadDetails(string nodetextselect) {
                         try
                         {
-                                nodetextselect = nodetextselect.Replace("[","");
-                                nodetextselect = nodetextselect.Replace("]", "");
+                            nodetextselect = nodetextselect.Replace("[", "");
+                            nodetextselect = nodetextselect.Replace("]", "");
 
-                                string query = SQLHelper.fetch_DataLoadDetails + " WHERE replace(replace(SourceTable,'[',''),']','')	= '" + nodetextselect + "'";
-                                if (nodetextselect=="")
-                                {
-                                        query = SQLHelper.fetch_DataLoadDetails;
-                                }
-                            DataSet ds = SQLHelper.getDataSet(query, "ETLFramework", true);
+                            string query = SQLHelper.fetch_DataLoadDetails + " WHERE replace(replace(SourceTable,'[',''),']','')	= '" + nodetextselect + "'";
+                            if (nodetextselect == "")
+                            {
+                                query = SQLHelper.fetch_DataLoadDetails;
+                            }
+                            DataSet ds = SQLHelper.getDataSet(query, true, true);
                             dataLoadGrdiview(ds);
+               
+                                
                         }
                         catch (Exception ex)
                         {
@@ -328,7 +326,7 @@ namespace SQL_Perf_Light
            
                     try
                     {
-                        DataSet ds = SQLHelper.fetchTableColumns(txtSourceServer.Text,txtSourceDatabase.Text,txtSourceTable.Text,false);
+                        DataSet ds = SQLHelper.fetchTableColumns(txtSourceTable.Text,false);
 
                     StringBuilder sbSelect = new StringBuilder();
                 StringBuilder sbSourceTableColumnNames = new StringBuilder();
@@ -372,7 +370,7 @@ namespace SQL_Perf_Light
 
             try
             {
-                DataSet ds2 = SQLHelper.fetchTableColumnsProperties(txtSourceServer.Text, txtSourceDatabase.Text, txtSourceTable.Text, false);
+                DataSet ds2 = SQLHelper.fetchTableColumnsProperties(txtSourceTable.Text);
 
                 txtKeyColumns.Text = "";
                 txtWatermarkColumn.Text = "";
@@ -471,7 +469,7 @@ namespace SQL_Perf_Light
 
         private void btnInsertUpdate_Click(object sender, EventArgs e)
         {
-            SQLHelper.InsertUpdateDataLoadTable(txtSourceServer.Text, txtSourceDatabase.Text, txtSourceTable.Text, txtSourceQuery.Text, 
+            SQLHelper.InsertUpdateDataLoadTable(txtSourceTable.Text, txtSourceQuery.Text, 
                 txtLandingTargetTable.Text, txtTargetTable.Text, txtWatermarkColumn.Text, txtIdentityColumn.Text, txtKeyColumns.Text,txtSourceTableColumnNames.Text ,true);
             try
             {
@@ -492,7 +490,7 @@ namespace SQL_Perf_Light
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            SQLHelper.deleteFromDataLoadTable(txtSourceServer.Text, txtSourceDatabase.Text, txtSourceTable.Text);
+            SQLHelper.deleteFromDataLoadTable(txtSourceTable.Text);
             try
             {
                 //InitialPageLoadwithAllData();
