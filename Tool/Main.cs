@@ -245,16 +245,24 @@ namespace SQL_Perf_Light
             fetch_TableColumns();
             fetch_DataLoadDetails(selectedOption);
 
+           
+
+        string script =   SQLHelper.GenerateTableScript(txtSourceTable.Text);
+
+
+            //script = "--Script Created ";
+            script = script + Environment.NewLine ;
+
+            txtTargetTableScript.Text = script;
+
+            script=script.Replace(".[", ".[Landing");
+
+            txtLandingTableScript.Text = script; ;
+
             if (obj != null)
             {
                 obj.Close();
             }
-
-        string script =   SQLHelper.GenerateTableScript(txtSourceTable.Text);
-            txtCreateTableScript.Text = "//Script Created ";
-            txtCreateTableScript.Text = txtCreateTableScript.Text + Environment.NewLine + "" + script;
-
-
 
         }
         private void fillGridColumnWidth(DataGridView dgv)
@@ -493,6 +501,25 @@ namespace SQL_Perf_Light
                 MessageBox.Show(ex.Message);
             }
             MessageBox.Show("Successfully deleted.");
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnTargetTablesCreate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SQLHelper.executeTargetTableScripts(txtLandingTableScript.Text, txtTargetTableScript.Text);
+
+                MessageBox.Show("Successfully created.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 

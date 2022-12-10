@@ -118,20 +118,13 @@ namespace BIFramework
             ScriptingOptions scriptOptions = new ScriptingOptions();
 
             scriptOptions.ExtendedProperties = false;
-           // scriptOptions.ScriptDrops = true;
+            
+           // scriptOptions.ScriptForCreateOrAlter = true;
             //scriptOptions.IncludeHeaders= false;
             //scriptOptions.IncludeIfNotExists = true;
             scriptOptions.NoIdentities = true;
-            scriptOptions.ScriptForCreateDrop = true;
-            //scriptOptions.WithDependencies = false;
-            //scriptOptions.DriAllConstraints = false;
-            //scriptOptions.DriAllKeys = false;
-            //scriptOptions.DriChecks = false;
-            //scriptOptions.DriForeignKeys = false;
-            //scriptOptions.DriIndexes = false;
-            //scriptOptions.DriPrimaryKey= false;
-            //scriptOptions.DriUniqueKeys = false;
-            //scriptOptions.PrimaryObject = false;
+           // scriptOptions.ScriptForCreateDrop = true;
+            
             //scriptOptions.TimestampToBinary = true;
             
             //scriptOptions.Indexes = false;
@@ -147,8 +140,45 @@ namespace BIFramework
 
                 if (trimstringtocompare(myTable.ToString())== trimstringtocompare(tableName))
                 {
-
+                    scriptOptions.ScriptDrops = true;
                     StringCollection tableScripts = myTable.Script(scriptOptions);
+
+                    foreach (string script in tableScripts)
+                    {
+                        Console.WriteLine(script);
+                        sb.AppendLine(script);
+
+                    }
+                    
+                    sb.AppendLine("");
+                    sb.AppendLine("");
+
+                    scriptOptions.ScriptDrops = false;
+
+                    scriptOptions.ScriptForCreateDrop = true;
+                    scriptOptions.NoCollation = true;
+                    //scriptOptions.ExtendedProperties = false;
+                    scriptOptions.TimestampToBinary = true;
+                    
+                    scriptOptions.AnsiFile = false;
+                    scriptOptions.AnsiPadding = false;
+                    //scriptOptions.EnforceScriptingOptions = false;
+
+                    scriptOptions.ScriptBatchTerminator = true;
+                    scriptOptions.NoCommandTerminator = false;
+                    scriptOptions.AllowSystemObjects = false;
+
+                    scriptOptions.WithDependencies = false;
+                    scriptOptions.DriAllConstraints = false;
+                    scriptOptions.DriAllKeys = false;
+                    scriptOptions.DriChecks = false;
+                    scriptOptions.DriForeignKeys = false;
+                    scriptOptions.DriIndexes = false;
+                    scriptOptions.DriPrimaryKey = false;
+                    scriptOptions.DriUniqueKeys = false;
+                    //scriptOptions.PrimaryObject = false;
+
+                    tableScripts = myTable.Script(scriptOptions);
 
                     foreach (string script in tableScripts)
                     {
@@ -158,24 +188,27 @@ namespace BIFramework
                     }
 
                     /* Generating CREATE TABLE command */
-
+/*
                     tableScripts = myTable.Script();
 
                     foreach (string script in tableScripts)
                     {
                         Console.WriteLine(script);
-
-
-
-
                     }
+*/
                 }
                 /* Generating IF EXISTS and DROP command for tables */
 
 
             }
+            sb.AppendLine("");
 
-          return  sb.ToString();
+            //Adding Default columns
+            sb.AppendLine("ALTER TABLE "+ tableName + " ADD CreatedAsAt DATETIME NOT NULL DEFAULT (GETDATE())");
+            sb.AppendLine("ALTER TABLE "+ tableName + " ADD ModifiedAsAt DATETIME NOT NULL DEFAULT (GETDATE())");
+            sb.AppendLine("ALTER TABLE "+ tableName + " ADD ETLBatchLogId INT NULL");
+
+            return  sb.ToString();
         }
        static string trimstringtocompare(string name) {
 
@@ -267,6 +300,15 @@ namespace BIFramework
             bd.InsertUpdateSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable, SourceQuery, LandingTargetTable, TargetTable, "", HighWaterMarkColumn, AutoIdentityColumn, KeyColumns, SourceTableColumnNames);
 
         }
+
+        public static void executeTargetTableScripts(string LandingTableScript,string TargetTableScript)
+        {
+            BaseDataAccess bd = new BaseDataAccess(target_connectionString);
+            bd.executeScript(target_connectionString,LandingTableScript);
+            bd.executeScript(target_connectionString, TargetTableScript);
+
+        }
+
         public static void deleteFromDataLoadTable(string SourceTable)
         {
 
