@@ -210,35 +210,19 @@ namespace BIFramework
 
             return  sb.ToString();
         }
-       static string trimstringtocompare(string name) {
+       public static string trimstringtocompare(string name) {
 
             return name.Trim().Replace("[", "").Replace("]", "");
 
         }
-        public static DataSet getDataSet(string sqlqueryText,bool isTargetDBConnection, bool isETLFramework=false)
+        public static DataSet getDataSet(string sqlqueryText, string conn)
         {
-
             
-
-            string lcfnlSQLConnection;
-            if (isTargetDBConnection)
-            {
-                lcfnlSQLConnection = target_connectionString;
-            }
-            else
-            {
-                lcfnlSQLConnection = source_connectionString;
-            }
-            if (isETLFramework)
-            {
-                lcfnlSQLConnection = target_connectionString_etlframework;
-            }
-            
-            BaseDataAccess bd = new BaseDataAccess(lcfnlSQLConnection);
+            BaseDataAccess bd = new BaseDataAccess(conn);
             
             try
             {
-                DataSet ds = bd.GetDataSet(lcfnlSQLConnection, sqlqueryText);
+                DataSet ds = bd.GetDataSet(conn, sqlqueryText);
                 return ds;
             }
             catch (Exception ex)

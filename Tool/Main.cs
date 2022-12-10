@@ -206,14 +206,25 @@ namespace SQL_Perf_Light
                 
                 string sourceTablesQuery = "SELECT '['+TABLE_SCHEMA+'].['+TABLE_NAME+']' TableName FROM [INFORMATION_SCHEMA].[TABLES] ORDER BY 1";
 
-            DataSet dsGetTables = SQLHelper.getDataSet(sourceTablesQuery, false);
-            //DataSet dsalltables = SQLHelper.getDataSet(SQLHelper.fetch_user_all_tables_bydatabase, cmbAllDatabases.SelectedItem.ToString(),true);
-            foreach (DataRow dr in dsGetTables.Tables[0].Rows)
-            {
-                string TableName = dr["TableName"].ToString();
-                TreeNode tn = new TreeNode(TableName);
-                treeViewSQL.Nodes.Add(tn);
-            }
+                DataSet dsGetSourceTables = SQLHelper.getDataSet(sourceTablesQuery, SQLHelper.source_connectionString);
+                DataSet dsGetTargetTables = SQLHelper.getDataSet(sourceTablesQuery, SQLHelper.target_connectionString);
+
+                foreach (DataRow dr in dsGetSourceTables.Tables[0].Rows)
+                {
+                    string sourceTableName = dr["TableName"].ToString();
+                    TreeNode tn = new TreeNode(sourceTableName);
+                    foreach (DataRow drtarget in dsGetTargetTables.Tables[0].Rows)
+                    {
+                        string targetTableName = drtarget["TableName"].ToString();
+
+                        if (SQLHelper.trimstringtocompare(sourceTableName) == SQLHelper.trimstringtocompare(targetTableName))
+                        {
+                            tn.BackColor = Color.LightSkyBlue;
+                        }
+                    }
+                    
+                    treeViewSQL.Nodes.Add(tn);
+                }
 
             }
             catch (Exception ex)
@@ -314,7 +325,7 @@ namespace SQL_Perf_Light
                             {
                                 query = SQLHelper.fetch_DataLoadDetails;
                             }
-                            DataSet ds = SQLHelper.getDataSet(query, true, true);
+                            DataSet ds = SQLHelper.getDataSet(query, SQLHelper.target_connectionString_etlframework);
                             dataLoadGrdiview(ds);
                
                                 
