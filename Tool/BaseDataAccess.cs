@@ -257,6 +257,30 @@ namespace SQL_Perf_Light
             return ds;
         }
 
+        public void executeScript(string ConnectionString, string script)
+        {
+            
+            try
+            {
+                using (SqlConnection connection = this.GetConnection())
+                {
+                    //SqlDataAdapter da = new SqlDataAdapter();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.CommandText = "spr_executeSQLObjectScript";
+                    cmd.Parameters.Add(new SqlParameter("@ScriptQuery", SqlDbType.NVarChar)).Value = script;
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                //LogException("Failed to ExecuteScalar for " + procedureName, ex, parameters);
+                throw;
+            }
+        }
+
         public void InsertUpdateSourceDataLoadDetails(string SourceServer
            , string SourceDatabase
            , string SourceTable
