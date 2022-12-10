@@ -6,7 +6,7 @@
       <Value Profile="(Default)">rajsqlserver2022.database.windows.net</Value>
     </Setting>
     <Setting Name="target_sql_db" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Landing</Value>
+      <Value Profile="(Default)">azadw</Value>
     </Setting>
     <Setting Name="target_username" Type="System.String" Scope="User">
       <Value Profile="(Default)">raj</Value>

@@ -1,5 +1,7 @@
 using BIFramework;
 using ClosedXML.Excel;
+using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer.Management.Smo;
 //using DataGridViewAutoFilter;
 using System;
 using System.Data;
@@ -127,23 +129,17 @@ namespace SQL_Perf_Light
 
             try
             {
-               
-
-                cmbAllDatabases.Items.Add(SQLHelper.source_sql_db);
-
-                if (cmbAllDatabases.Items.Count >= 1)
-                {
-                    cmbAllDatabases.SelectedIndex = 0;
-                }
+                txtSourceServer.Text= SQLHelper.source_sql_server;
+                txtSourceDatabase.Text = SQLHelper.source_sql_db;
+                txtTargetServer.Text = SQLHelper.target_sql_server;
+                txtTargetDatabase.Text = SQLHelper.target_sql_db;
 
                 LoadintoTreeView();
-               treeViewSQL.Nodes[0].Expand();
+                treeViewSQL.Nodes[0].Expand();
                 treeViewSQL.Nodes[0].EnsureVisible();
-                
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
 
@@ -241,22 +237,11 @@ namespace SQL_Perf_Light
 
             nodeLevelSelected = e.Node.Level;
             selectedOption = e.Node.Text;
-
-            txtSourceDatabase.Text ="["+ cmbAllDatabases.SelectedItem.ToString() +"]";
+            
             txtSourceTable.Text = selectedOption;
             txtLandingTargetTable.Text = txtSourceTable.Text.Replace(".[", ".[Landing");
             txtTargetTable.Text = txtSourceTable.Text;
 
-
-            //if (e.Node.Parent != null)
-            //{
-            //    nodetextselect = e.Node.Parent.Text;
-            //}
-
-            //using (ProgressBarForm frm=new ProgressBarForm(LoadData))
-            //{
-            //    frm.ShowDialog(this);
-            //}
             fetch_TableColumns();
             fetch_DataLoadDetails(selectedOption);
 
@@ -264,6 +249,13 @@ namespace SQL_Perf_Light
             {
                 obj.Close();
             }
+
+        string script =   SQLHelper.GenerateTableScript(txtSourceTable.Text);
+            txtCreateTableScript.Text = "//Script Created ";
+            txtCreateTableScript.Text = txtCreateTableScript.Text + Environment.NewLine + "" + script;
+
+
+
         }
         private void fillGridColumnWidth(DataGridView dgv)
         {
