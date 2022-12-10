@@ -292,12 +292,12 @@ namespace BIFramework
             }
         }
         public static void InsertUpdateDataLoadTable(string SourceTable, string SourceQuery, string LandingTargetTable, string TargetTable,
-            string HighWaterMarkColumn, string AutoIdentityColumn, string KeyColumns, string SourceTableColumnNames, bool isTargetDBConnection)
+            string HighWaterMarkColumn, string AutoIdentityColumn, string KeyColumns, string SourceTableColumnNames)
         {
 
 
             BaseDataAccess bd = new BaseDataAccess(target_sql_db_etlframework);
-            bd.InsertUpdateSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable, SourceQuery, LandingTargetTable, TargetTable, "", HighWaterMarkColumn, AutoIdentityColumn, KeyColumns, SourceTableColumnNames);
+            bd.InsertUpdateSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable, SourceQuery, LandingTargetTable, TargetTable, "", HighWaterMarkColumn, AutoIdentityColumn, KeyColumns, SourceTableColumnNames,SQLHelper.target_connectionString_etlframework);
 
         }
 
@@ -309,11 +309,11 @@ namespace BIFramework
 
         }
 
-        public static void deleteFromDataLoadTable(string SourceTable)
+        public static void deleteFromDataLoadTable(string SourceTable,string conn)
         {
 
             BaseDataAccess bd = new BaseDataAccess(target_sql_db_etlframework);
-            bd.deleteFromSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable);
+            bd.deleteFromSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable,conn);
 
         }
 

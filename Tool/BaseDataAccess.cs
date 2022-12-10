@@ -22,9 +22,9 @@ namespace SQL_Perf_Light
             this.ConnectionString = connectionString;
         }
 
-        private SqlConnection GetConnection()
+        private SqlConnection GetConnection(string connectionStringlc)
         {
-            SqlConnection connection = new SqlConnection(this.ConnectionString);
+            SqlConnection connection = new SqlConnection(connectionStringlc);
             if (connection.State != ConnectionState.Open)
                 connection.Open();
             return connection;
@@ -66,7 +66,7 @@ namespace SQL_Perf_Light
 
             return parameterObject;
         }
-
+        /*
         public int ExecuteNonQuery(string procedureName, SqlParameter[] parameters, CommandType commandType = CommandType.StoredProcedure)
         {
             int returnValue = -1;
@@ -93,7 +93,8 @@ namespace SQL_Perf_Light
 
             return returnValue;
         }
-
+        */
+        /*
         protected object ExecuteScalar(string procedureName, List<SqlParameter> parameters)
         {
             object returnValue = null;
@@ -120,7 +121,7 @@ namespace SQL_Perf_Light
 
             return returnValue;
         }
-
+        */
         //public DbDataReader GetDataReader(string procedureName, List<DbParameter> parameters, CommandType commandType = CommandType.StoredProcedure)
         //{
         //    DbDataReader ds;
@@ -151,7 +152,7 @@ namespace SQL_Perf_Light
             DataSet ds = new DataSet();
             try
             {
-                using (SqlConnection connection = this.GetConnection())
+                using (SqlConnection connection = this.GetConnection(ConnectionString))
                 {
                     SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand cmd = connection.CreateCommand();
@@ -195,12 +196,12 @@ namespace SQL_Perf_Light
 
             
         //}
-        public DataSet getAnswersByQuestionPaging(string ConnectionString, string procedureName,int QID,int pageno)
+        public DataSet getAnswersByQuestionPaging(string ConnectionString, string procedureName,int QID,int pageno,string conn)
         {
             DataSet ds = new DataSet();
             try
             {
-                using (SqlConnection connection = this.GetConnection())
+                using (SqlConnection connection = this.GetConnection(conn))
                 {
                    //SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand cmd = connection.CreateCommand();
@@ -226,6 +227,7 @@ namespace SQL_Perf_Light
 
             return ds;
         }
+        /*
         public DataSet GetDataSetByQuestionProcedure(string ConnectionString, string procedureName,string question)
         {
             DataSet ds = new DataSet();
@@ -256,13 +258,13 @@ namespace SQL_Perf_Light
 
             return ds;
         }
-
+        */
         public void executeScript(string ConnectionString, string script)
         {
             
             try
             {
-                using (SqlConnection connection = this.GetConnection())
+                using (SqlConnection connection = this.GetConnection(ConnectionString))
                 {
                     //SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand cmd = connection.CreateCommand();
@@ -290,11 +292,11 @@ namespace SQL_Perf_Light
            , string DataLoadType
            , string HighWaterMarkColumn
            , string AutoIdentityColumn
-           , string KeyColumns,string SourceTableColumnNames )
+           , string KeyColumns,string SourceTableColumnNames,string conn )
         {
             try
             {
-                using (SqlConnection connection = this.GetConnection())
+                using (SqlConnection connection = this.GetConnection(conn))
                 {
                     //SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand cmd = connection.CreateCommand();
@@ -333,11 +335,11 @@ namespace SQL_Perf_Light
 
         public void deleteFromSourceDataLoadDetails(string SourceServer
           , string SourceDatabase
-          , string SourceTable          )
+          , string SourceTable   ,string conn       )
         {
             try
             {
-                using (SqlConnection connection = this.GetConnection())
+                using (SqlConnection connection = this.GetConnection(conn))
                 {
                     //SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand cmd = connection.CreateCommand();
