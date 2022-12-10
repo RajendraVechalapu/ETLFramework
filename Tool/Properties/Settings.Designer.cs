@@ -37,7 +37,7 @@ namespace BIFramework.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Landing")]
+        [global::System.Configuration.DefaultSettingValueAttribute("azadw")]
         public string target_sql_db {
             get {
                 return ((string)(this["target_sql_db"]));

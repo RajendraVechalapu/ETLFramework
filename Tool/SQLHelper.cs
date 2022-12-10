@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using SQL_Perf_Light;
+using Microsoft.SqlServer.Management.Smo;
+using System.Collections.Specialized;
+using Microsoft.SqlServer.Management.Common;
 
 namespace BIFramework
 {
@@ -51,7 +54,7 @@ namespace BIFramework
             "      ,[AutoIdentityColumn]      ,[KeyColumns]  FROM [ETL].[SourceTablesDataLoadDetails] ";
 
         public static string fecth_SourceTableColumns = "spr_fetch_TableQuery";
-
+       public static Server myServer;
         public static void InitializeIcons()
         {
             source_connectionString = "Data Source=" + source_sql_server + ";Connection Timeout=6000;Initial Catalog=" + source_sql_db;
@@ -86,9 +89,104 @@ namespace BIFramework
                 target_connectionString_etlframework = target_connectionString_etlframework + " ; password=" + target_sql_password;
             }
 
+
+            ServerConnection srvConn2 = new ServerConnection(SQLHelper.source_sql_server);
+            srvConn2.LoginSecure = false;
+            srvConn2.Login = SQLHelper.source_sql_username;
+            srvConn2.Password = SQLHelper.source_sql_password;
+            myServer = new Server(srvConn2);
+           // MessageBox.Show("Successfully connected to source: "+ myServer.Information.Version);
+        }
+
+        public static string GenerateTableScript(string tableName)
+
+        {
+
+          //  Scripter scripter = new Scripter(myServer);
+            
+
+            //Database myAdventureWorks = myServer.Databases[“AdventureWorks”];
+
+            Database myAdventureWorks = myServer.Databases[source_sql_db];
+
+            /* With ScriptingOptions you can specify different scripting
+
+             * options, for example to include IF NOT EXISTS, DROP
+
+             * statements, output location etc*/
+
+            ScriptingOptions scriptOptions = new ScriptingOptions();
+
+            scriptOptions.ExtendedProperties = false;
+           // scriptOptions.ScriptDrops = true;
+            //scriptOptions.IncludeHeaders= false;
+            //scriptOptions.IncludeIfNotExists = true;
+            scriptOptions.NoIdentities = true;
+            scriptOptions.ScriptForCreateDrop = true;
+            //scriptOptions.WithDependencies = false;
+            //scriptOptions.DriAllConstraints = false;
+            //scriptOptions.DriAllKeys = false;
+            //scriptOptions.DriChecks = false;
+            //scriptOptions.DriForeignKeys = false;
+            //scriptOptions.DriIndexes = false;
+            //scriptOptions.DriPrimaryKey= false;
+            //scriptOptions.DriUniqueKeys = false;
+            //scriptOptions.PrimaryObject = false;
+            //scriptOptions.TimestampToBinary = true;
+            
+            //scriptOptions.Indexes = false;
+            //scriptOptions.DriIndexes = false;
+            
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Clear();
+
+            foreach (Table myTable in myAdventureWorks.Tables)
+
+            {
+
+                if (trimstringtocompare(myTable.ToString())== trimstringtocompare(tableName))
+                {
+
+                    StringCollection tableScripts = myTable.Script(scriptOptions);
+
+                    foreach (string script in tableScripts)
+                    {
+                        Console.WriteLine(script);
+                        sb.AppendLine(script);
+
+                    }
+
+                    /* Generating CREATE TABLE command */
+
+                    tableScripts = myTable.Script();
+
+                    foreach (string script in tableScripts)
+                    {
+                        Console.WriteLine(script);
+
+
+
+
+                    }
+                }
+                /* Generating IF EXISTS and DROP command for tables */
+
+
+            }
+
+          return  sb.ToString();
+        }
+       static string trimstringtocompare(string name) {
+
+            return name.Trim().Replace("[", "").Replace("]", "");
+
         }
         public static DataSet getDataSet(string sqlqueryText,bool isTargetDBConnection, bool isETLFramework=false)
         {
+
+            
+
             string lcfnlSQLConnection;
             if (isTargetDBConnection)
             {
@@ -176,6 +274,9 @@ namespace BIFramework
             bd.deleteFromSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable);
 
         }
+
+
+        
         public static DataSet fetchTableColumnsProperties(string TableName)
         {
 

@@ -30,11 +30,8 @@ namespace SQL_Perf_Light
         {
             this.components = new System.ComponentModel.Container();
             this.grdViewDataLoadDetails = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbAllDatabases = new System.Windows.Forms.ComboBox();
             this.treeViewSQL = new System.Windows.Forms.TreeView();
             this.lblSelectedTable = new System.Windows.Forms.Label();
-            this.btnRefresh = new System.Windows.Forms.Button();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.bindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.txtSourceServer = new System.Windows.Forms.TextBox();
@@ -56,15 +53,21 @@ namespace SQL_Perf_Light
             this.label8 = new System.Windows.Forms.Label();
             this.txtKeyColumns = new System.Windows.Forms.TextBox();
             this.btnInsertUpdate = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.txtSourceTableColumnNames = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtTargetDatabase = new System.Windows.Forms.TextBox();
+            this.txtTargetServer = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCreateTableScript = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.grdViewDataLoadDetails)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource2)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // grdViewDataLoadDetails
@@ -81,32 +84,14 @@ namespace SQL_Perf_Light
             this.grdViewDataLoadDetails.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.grdViewDataLoadDetails.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
-            this.label1.TabIndex = 24;
-            this.label1.Text = "Source Database";
-            // 
-            // cmbAllDatabases
-            // 
-            this.cmbAllDatabases.FormattingEnabled = true;
-            this.cmbAllDatabases.Location = new System.Drawing.Point(92, 16);
-            this.cmbAllDatabases.Name = "cmbAllDatabases";
-            this.cmbAllDatabases.Size = new System.Drawing.Size(189, 21);
-            this.cmbAllDatabases.TabIndex = 25;
-            this.cmbAllDatabases.SelectedIndexChanged += new System.EventHandler(this.cmbAllDatabases_SelectedIndexChanged);
-            // 
             // treeViewSQL
             // 
             this.treeViewSQL.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.treeViewSQL.HideSelection = false;
             this.treeViewSQL.LineColor = System.Drawing.Color.Coral;
-            this.treeViewSQL.Location = new System.Drawing.Point(7, 82);
+            this.treeViewSQL.Location = new System.Drawing.Point(7, 140);
             this.treeViewSQL.Name = "treeViewSQL";
-            this.treeViewSQL.Size = new System.Drawing.Size(272, 671);
+            this.treeViewSQL.Size = new System.Drawing.Size(272, 613);
             this.treeViewSQL.TabIndex = 43;
             this.treeViewSQL.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewSQL_AfterSelect);
             // 
@@ -114,34 +99,23 @@ namespace SQL_Perf_Light
             // 
             this.lblSelectedTable.AutoSize = true;
             this.lblSelectedTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSelectedTable.Location = new System.Drawing.Point(714, 24);
+            this.lblSelectedTable.Location = new System.Drawing.Point(572, 82);
             this.lblSelectedTable.Name = "lblSelectedTable";
             this.lblSelectedTable.Size = new System.Drawing.Size(139, 13);
             this.lblSelectedTable.TabIndex = 44;
             this.lblSelectedTable.Text = "Selected Table : Empty";
             // 
-            // btnRefresh
-            // 
-            this.btnRefresh.Location = new System.Drawing.Point(304, 12);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(90, 23);
-            this.btnRefresh.TabIndex = 45;
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
-            // 
             // txtSourceServer
             // 
-            this.txtSourceServer.Location = new System.Drawing.Point(285, 82);
+            this.txtSourceServer.Location = new System.Drawing.Point(3, 16);
             this.txtSourceServer.Name = "txtSourceServer";
-            this.txtSourceServer.Size = new System.Drawing.Size(193, 20);
+            this.txtSourceServer.Size = new System.Drawing.Size(239, 20);
             this.txtSourceServer.TabIndex = 47;
-            this.txtSourceServer.Text = "[LAPTOP-NI0AKHN4]";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(285, 63);
+            this.label2.Location = new System.Drawing.Point(3, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 13);
             this.label2.TabIndex = 48;
@@ -150,7 +124,7 @@ namespace SQL_Perf_Light
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(501, 63);
+            this.label3.Location = new System.Drawing.Point(248, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(87, 13);
             this.label3.TabIndex = 50;
@@ -158,9 +132,9 @@ namespace SQL_Perf_Light
             // 
             // txtSourceDatabase
             // 
-            this.txtSourceDatabase.Location = new System.Drawing.Point(501, 82);
+            this.txtSourceDatabase.Location = new System.Drawing.Point(248, 16);
             this.txtSourceDatabase.Name = "txtSourceDatabase";
-            this.txtSourceDatabase.Size = new System.Drawing.Size(193, 20);
+            this.txtSourceDatabase.Size = new System.Drawing.Size(178, 20);
             this.txtSourceDatabase.TabIndex = 49;
             // 
             // label4
@@ -193,8 +167,9 @@ namespace SQL_Perf_Light
             this.txtSourceQuery.Location = new System.Drawing.Point(289, 188);
             this.txtSourceQuery.Multiline = true;
             this.txtSourceQuery.Name = "txtSourceQuery";
-            this.txtSourceQuery.Size = new System.Drawing.Size(603, 342);
+            this.txtSourceQuery.Size = new System.Drawing.Size(603, 42);
             this.txtSourceQuery.TabIndex = 53;
+            this.txtSourceQuery.WordWrap = false;
             // 
             // lblLandingTable
             // 
@@ -278,7 +253,7 @@ namespace SQL_Perf_Light
             // 
             // btnInsertUpdate
             // 
-            this.btnInsertUpdate.Location = new System.Drawing.Point(1273, 271);
+            this.btnInsertUpdate.Location = new System.Drawing.Point(1483, 271);
             this.btnInsertUpdate.Name = "btnInsertUpdate";
             this.btnInsertUpdate.Size = new System.Drawing.Size(127, 103);
             this.btnInsertUpdate.TabIndex = 65;
@@ -286,18 +261,10 @@ namespace SQL_Perf_Light
             this.btnInsertUpdate.UseVisualStyleBackColor = true;
             this.btnInsertUpdate.Click += new System.EventHandler(this.btnInsertUpdate_Click);
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(7, 56);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(206, 20);
-            this.textBox1.TabIndex = 66;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(1273, 191);
+            this.label9.Location = new System.Drawing.Point(1009, 9);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(112, 13);
             this.label9.TabIndex = 68;
@@ -305,7 +272,7 @@ namespace SQL_Perf_Light
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(1273, 210);
+            this.textBox2.Location = new System.Drawing.Point(1009, 28);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(193, 20);
             this.textBox2.TabIndex = 67;
@@ -313,7 +280,7 @@ namespace SQL_Perf_Light
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1276, 400);
+            this.button1.Location = new System.Drawing.Point(1486, 400);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(109, 49);
             this.button1.TabIndex = 69;
@@ -332,11 +299,75 @@ namespace SQL_Perf_Light
             // 
             // txtSourceTableColumnNames
             // 
-            this.txtSourceTableColumnNames.Location = new System.Drawing.Point(957, 188);
+            this.txtSourceTableColumnNames.Location = new System.Drawing.Point(898, 188);
             this.txtSourceTableColumnNames.Multiline = true;
             this.txtSourceTableColumnNames.Name = "txtSourceTableColumnNames";
-            this.txtSourceTableColumnNames.Size = new System.Drawing.Size(279, 342);
+            this.txtSourceTableColumnNames.Size = new System.Drawing.Size(338, 42);
             this.txtSourceTableColumnNames.TabIndex = 70;
+            this.txtSourceTableColumnNames.WordWrap = false;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.txtTargetDatabase, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.txtTargetServer, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label11, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.txtSourceServer, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label3, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.txtSourceDatabase, 1, 1);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(7, 2);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(982, 44);
+            this.tableLayoutPanel1.TabIndex = 72;
+            // 
+            // txtTargetDatabase
+            // 
+            this.txtTargetDatabase.Location = new System.Drawing.Point(802, 16);
+            this.txtTargetDatabase.Name = "txtTargetDatabase";
+            this.txtTargetDatabase.Size = new System.Drawing.Size(178, 20);
+            this.txtTargetDatabase.TabIndex = 54;
+            // 
+            // txtTargetServer
+            // 
+            this.txtTargetServer.Location = new System.Drawing.Point(432, 16);
+            this.txtTargetServer.Name = "txtTargetServer";
+            this.txtTargetServer.Size = new System.Drawing.Size(364, 20);
+            this.txtTargetServer.TabIndex = 53;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(802, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(84, 13);
+            this.label11.TabIndex = 52;
+            this.label11.Text = "TargetDatabase";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(432, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(69, 13);
+            this.label1.TabIndex = 51;
+            this.label1.Text = "TargetServer";
+            // 
+            // txtCreateTableScript
+            // 
+            this.txtCreateTableScript.Location = new System.Drawing.Point(288, 259);
+            this.txtCreateTableScript.Multiline = true;
+            this.txtCreateTableScript.Name = "txtCreateTableScript";
+            this.txtCreateTableScript.Size = new System.Drawing.Size(591, 263);
+            this.txtCreateTableScript.TabIndex = 73;
             // 
             // Form1
             // 
@@ -344,13 +375,14 @@ namespace SQL_Perf_Light
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1525, 781);
+            this.ClientSize = new System.Drawing.Size(1753, 781);
+            this.Controls.Add(this.txtCreateTableScript);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.txtSourceTableColumnNames);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnInsertUpdate);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtIdentityColumn);
@@ -366,15 +398,8 @@ namespace SQL_Perf_Light
             this.Controls.Add(this.txtSourceQuery);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtSourceTable);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.txtSourceDatabase);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtSourceServer);
-            this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.lblSelectedTable);
             this.Controls.Add(this.treeViewSQL);
-            this.Controls.Add(this.cmbAllDatabases);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.grdViewDataLoadDetails);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
@@ -385,6 +410,8 @@ namespace SQL_Perf_Light
             ((System.ComponentModel.ISupportInitialize)(this.grdViewDataLoadDetails)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource2)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -392,11 +419,8 @@ namespace SQL_Perf_Light
 
         #endregion
         private System.Windows.Forms.DataGridView grdViewDataLoadDetails;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbAllDatabases;
         private System.Windows.Forms.TreeView treeViewSQL;
         private System.Windows.Forms.Label lblSelectedTable;
-        private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.BindingSource bindingSource2;
         private System.Windows.Forms.TextBox txtSourceServer;
@@ -418,12 +442,17 @@ namespace SQL_Perf_Light
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtKeyColumns;
         private System.Windows.Forms.Button btnInsertUpdate;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtSourceTableColumnNames;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TextBox txtTargetDatabase;
+        private System.Windows.Forms.TextBox txtTargetServer;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtCreateTableScript;
     }
 }
 
