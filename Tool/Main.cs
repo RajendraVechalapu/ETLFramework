@@ -1,11 +1,7 @@
 using BIFramework;
-using ClosedXML.Excel;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
 //using DataGridViewAutoFilter;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -178,7 +174,7 @@ namespace SQL_Perf_Light
                     if (row.Cells[0].Value != null)
                     {
                         //tableSelectedForColumnSize = row.Cells[0].Value.ToString();
-                        lblSelectedTable.Text = "Selected Table : " + row.Cells[0].Value.ToString() + "";
+                        //lblSelectedTable.Text = "Selected Table : " + row.Cells[0].Value.ToString() + "";
                     }
                 }
             }
@@ -245,10 +241,19 @@ namespace SQL_Perf_Light
             fetch_TableColumns();
             fetch_DataLoadDetails(selectedOption);
 
-           
+            if (grdViewDataLoadDetails.Rows.Count <=0)
+            {
+                btnTargetTablesCreate.Enabled = false;
 
-        string script =   SQLHelper.GenerateTableScript(txtSourceTable.Text);
+            }
+            else
+            {
+                btnTargetTablesCreate.Enabled = true;
+            }
 
+            string script =   SQLHelper.GenerateTableScript(txtSourceTable.Text);
+
+            
 
             //script = "--Script Created ";
             script = script + Environment.NewLine ;
@@ -470,7 +475,7 @@ namespace SQL_Perf_Light
         private void btnInsertUpdate_Click(object sender, EventArgs e)
         {
             SQLHelper.InsertUpdateDataLoadTable(txtSourceTable.Text, txtSourceQuery.Text, 
-                txtLandingTargetTable.Text, txtTargetTable.Text, txtWatermarkColumn.Text, txtIdentityColumn.Text, txtKeyColumns.Text,txtSourceTableColumnNames.Text ,true);
+                txtLandingTargetTable.Text, txtTargetTable.Text, txtWatermarkColumn.Text, txtIdentityColumn.Text, txtKeyColumns.Text,txtSourceTableColumnNames.Text );
             try
             {
                // InitialPageLoadwithAllData();
@@ -480,7 +485,7 @@ namespace SQL_Perf_Light
             {
                 MessageBox.Show(ex.Message);
             }
-            MessageBox.Show("Successfully updated.");
+            btnTargetTablesCreate.Enabled = true;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -490,7 +495,7 @@ namespace SQL_Perf_Light
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            SQLHelper.deleteFromDataLoadTable(txtSourceTable.Text);
+            SQLHelper.deleteFromDataLoadTable(txtSourceTable.Text,SQLHelper.target_sql_db_etlframework);
             try
             {
                 //InitialPageLoadwithAllData();
@@ -500,7 +505,7 @@ namespace SQL_Perf_Light
             {
                 MessageBox.Show(ex.Message);
             }
-            MessageBox.Show("Successfully deleted.");
+            lblMessage.Text = "Successfully deleted.";
         }
 
         private void label5_Click(object sender, EventArgs e)
@@ -514,7 +519,7 @@ namespace SQL_Perf_Light
             {
                 SQLHelper.executeTargetTableScripts(txtLandingTableScript.Text, txtTargetTableScript.Text);
 
-                MessageBox.Show("Successfully created.");
+                lblMessage.Text="Successfully Created.";
             }
             catch (Exception ex)
             {
