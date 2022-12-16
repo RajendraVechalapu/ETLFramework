@@ -372,7 +372,7 @@ namespace SQL_Perf_Light
                         
                         }
 
-                           sbSelect.AppendLine(" FROM " + txtSourceServer.Text+"."+txtSourceDatabase.Text+"."+txtSourceTable.Text+"");
+                           sbSelect.AppendLine(" FROM "+txtSourceTable.Text+"");
 
                             txtSourceQuery.Text = sbSelect.ToString();
                             txtSourceTableColumnNames.Text = sbSourceTableColumnNames.ToString();
@@ -506,7 +506,7 @@ namespace SQL_Perf_Light
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            SQLHelper.deleteFromDataLoadTable(txtSourceTable.Text,SQLHelper.target_sql_db_etlframework);
+            SQLHelper.deleteFromDataLoadTable(txtSourceTable.Text,SQLHelper.target_connectionString_etlframework);
             try
             {
                 //InitialPageLoadwithAllData();
@@ -536,6 +536,11 @@ namespace SQL_Perf_Light
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

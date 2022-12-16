@@ -81,7 +81,7 @@ namespace SQL_Perf_Light
             this.grdViewDataLoadDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdViewDataLoadDetails.Location = new System.Drawing.Point(285, 101);
             this.grdViewDataLoadDetails.Name = "grdViewDataLoadDetails";
-            this.grdViewDataLoadDetails.Size = new System.Drawing.Size(1231, 207);
+            this.grdViewDataLoadDetails.Size = new System.Drawing.Size(1024, 207);
             this.grdViewDataLoadDetails.TabIndex = 1;
             this.grdViewDataLoadDetails.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.grdViewDataLoadDetails.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);
@@ -136,7 +136,7 @@ namespace SQL_Perf_Light
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 52);
+            this.label4.Location = new System.Drawing.Point(37, 78);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 13);
             this.label4.TabIndex = 52;
@@ -145,7 +145,7 @@ namespace SQL_Perf_Light
             // txtSourceTable
             // 
             this.txtSourceTable.BackColor = System.Drawing.Color.White;
-            this.txtSourceTable.Location = new System.Drawing.Point(90, 52);
+            this.txtSourceTable.Location = new System.Drawing.Point(117, 78);
             this.txtSourceTable.Name = "txtSourceTable";
             this.txtSourceTable.ReadOnly = true;
             this.txtSourceTable.Size = new System.Drawing.Size(159, 20);
@@ -175,7 +175,7 @@ namespace SQL_Perf_Light
             // lblLandingTable
             // 
             this.lblLandingTable.AutoSize = true;
-            this.lblLandingTable.Location = new System.Drawing.Point(1539, 337);
+            this.lblLandingTable.Location = new System.Drawing.Point(1435, 337);
             this.lblLandingTable.Name = "lblLandingTable";
             this.lblLandingTable.Size = new System.Drawing.Size(109, 13);
             this.lblLandingTable.TabIndex = 56;
@@ -184,7 +184,7 @@ namespace SQL_Perf_Light
             // txtLandingTargetTable
             // 
             this.txtLandingTargetTable.BackColor = System.Drawing.Color.White;
-            this.txtLandingTargetTable.Location = new System.Drawing.Point(1542, 354);
+            this.txtLandingTargetTable.Location = new System.Drawing.Point(1438, 354);
             this.txtLandingTargetTable.Name = "txtLandingTargetTable";
             this.txtLandingTargetTable.ReadOnly = true;
             this.txtLandingTargetTable.Size = new System.Drawing.Size(193, 20);
@@ -193,7 +193,7 @@ namespace SQL_Perf_Light
             // lblTargetTable
             // 
             this.lblTargetTable.AutoSize = true;
-            this.lblTargetTable.Location = new System.Drawing.Point(1542, 389);
+            this.lblTargetTable.Location = new System.Drawing.Point(1438, 389);
             this.lblTargetTable.Name = "lblTargetTable";
             this.lblTargetTable.Size = new System.Drawing.Size(68, 13);
             this.lblTargetTable.TabIndex = 58;
@@ -202,7 +202,7 @@ namespace SQL_Perf_Light
             // txtTargetTable
             // 
             this.txtTargetTable.BackColor = System.Drawing.Color.White;
-            this.txtTargetTable.Location = new System.Drawing.Point(1542, 405);
+            this.txtTargetTable.Location = new System.Drawing.Point(1438, 405);
             this.txtTargetTable.Name = "txtTargetTable";
             this.txtTargetTable.ReadOnly = true;
             this.txtTargetTable.Size = new System.Drawing.Size(193, 20);
@@ -264,7 +264,7 @@ namespace SQL_Perf_Light
             // 
             // btnInsertUpdate
             // 
-            this.btnInsertUpdate.Location = new System.Drawing.Point(1542, 92);
+            this.btnInsertUpdate.Location = new System.Drawing.Point(1315, 101);
             this.btnInsertUpdate.Name = "btnInsertUpdate";
             this.btnInsertUpdate.Size = new System.Drawing.Size(199, 60);
             this.btnInsertUpdate.TabIndex = 65;
@@ -293,7 +293,7 @@ namespace SQL_Perf_Light
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1632, 172);
+            this.button1.Location = new System.Drawing.Point(1324, 167);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(109, 49);
             this.button1.TabIndex = 69;
@@ -304,16 +304,17 @@ namespace SQL_Perf_Light
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(981, 317);
+            this.label10.Location = new System.Drawing.Point(876, 317);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(77, 13);
             this.label10.TabIndex = 71;
             this.label10.Text = "Table Columns";
+            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // txtSourceTableColumnNames
             // 
             this.txtSourceTableColumnNames.BackColor = System.Drawing.Color.White;
-            this.txtSourceTableColumnNames.Location = new System.Drawing.Point(984, 334);
+            this.txtSourceTableColumnNames.Location = new System.Drawing.Point(879, 333);
             this.txtSourceTableColumnNames.Multiline = true;
             this.txtSourceTableColumnNames.Name = "txtSourceTableColumnNames";
             this.txtSourceTableColumnNames.ReadOnly = true;
@@ -393,7 +394,7 @@ namespace SQL_Perf_Light
             // txtTargetTableScript
             // 
             this.txtTargetTableScript.BackColor = System.Drawing.Color.White;
-            this.txtTargetTableScript.Location = new System.Drawing.Point(984, 482);
+            this.txtTargetTableScript.Location = new System.Drawing.Point(879, 482);
             this.txtTargetTableScript.Multiline = true;
             this.txtTargetTableScript.Name = "txtTargetTableScript";
             this.txtTargetTableScript.ReadOnly = true;
@@ -402,7 +403,7 @@ namespace SQL_Perf_Light
             // 
             // btnTargetTablesCreate
             // 
-            this.btnTargetTablesCreate.Location = new System.Drawing.Point(1522, 482);
+            this.btnTargetTablesCreate.Location = new System.Drawing.Point(1418, 482);
             this.btnTargetTablesCreate.Name = "btnTargetTablesCreate";
             this.btnTargetTablesCreate.Size = new System.Drawing.Size(213, 49);
             this.btnTargetTablesCreate.TabIndex = 75;
@@ -414,7 +415,7 @@ namespace SQL_Perf_Light
             // 
             this.lblMessage.AutoSize = true;
             this.lblMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMessage.Location = new System.Drawing.Point(1522, 545);
+            this.lblMessage.Location = new System.Drawing.Point(1418, 545);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Size = new System.Drawing.Size(54, 17);
             this.lblMessage.TabIndex = 76;
@@ -426,7 +427,7 @@ namespace SQL_Perf_Light
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1753, 781);
+            this.ClientSize = new System.Drawing.Size(1664, 781);
             this.Controls.Add(this.lblMessage);
             this.Controls.Add(this.btnTargetTablesCreate);
             this.Controls.Add(this.txtTargetTableScript);
