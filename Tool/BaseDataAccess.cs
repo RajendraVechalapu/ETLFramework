@@ -289,11 +289,13 @@ namespace SQL_Perf_Light
            , string SourceQuery
            , string LandingTargetTable
            , string TargetTable
-           , string DataLoadType
            , string HighWaterMarkColumn
            , string AutoIdentityColumn
-           , string KeyColumns,string SourceTableColumnNames,string conn )
+           , string KeyColumns,string SourceTableColumnNames, string DataLoadType,string conn )
         {
+
+            string[] LandingTablestr = LandingTargetTable.Split('.');
+
             try
             {
                 using (SqlConnection connection = this.GetConnection(conn))
@@ -303,17 +305,18 @@ namespace SQL_Perf_Light
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.CommandText = "spr_InsertUpdateSourceDataLoadDetails";
-                    cmd.Parameters.Add(new SqlParameter("@SourceServer", SqlDbType.NVarChar)).Value = SourceServer;
-                    cmd.Parameters.Add(new SqlParameter("@SourceDatabase", SqlDbType.NVarChar)).Value = SourceDatabase;
-                    cmd.Parameters.Add(new SqlParameter("@SourceTable", SqlDbType.NVarChar)).Value = SourceTable;
-                    cmd.Parameters.Add(new SqlParameter("@SourceQuery", SqlDbType.NVarChar)).Value = SourceQuery;
-                    cmd.Parameters.Add(new SqlParameter("@SourceTableColumnNames", SqlDbType.NVarChar)).Value = SourceTableColumnNames;
-                    cmd.Parameters.Add(new SqlParameter("@LandingTargetTable", SqlDbType.NVarChar)).Value = LandingTargetTable;
-                    cmd.Parameters.Add(new SqlParameter("@TargetTable", SqlDbType.NVarChar)).Value = TargetTable;
-                    cmd.Parameters.Add(new SqlParameter("@DataLoadType", SqlDbType.NVarChar)).Value = DataLoadType;
-                    cmd.Parameters.Add(new SqlParameter("@HighWaterMarkColumn", SqlDbType.NVarChar)).Value = HighWaterMarkColumn;
-                    cmd.Parameters.Add(new SqlParameter("@AutoIdentityColumn", SqlDbType.NVarChar)).Value = AutoIdentityColumn;
-                    cmd.Parameters.Add(new SqlParameter("@KeyColumns", SqlDbType.NVarChar)).Value = KeyColumns;
+                    cmd.Parameters.Add(new SqlParameter("@SourceServer", SqlDbType.NVarChar, -1)).Value = SourceServer;
+                    cmd.Parameters.Add(new SqlParameter("@SourceDatabase", SqlDbType.NVarChar, -1)).Value = SourceDatabase;
+                    cmd.Parameters.Add(new SqlParameter("@SourceTable", SqlDbType.NVarChar, -1)).Value = SourceTable;
+                    cmd.Parameters.Add(new SqlParameter("@SourceQuery", SqlDbType.NVarChar, -1)).Value = SourceQuery;
+                    cmd.Parameters.Add(new SqlParameter("@SourceTableColumnNames", SqlDbType.NVarChar, -1)).Value = SourceTableColumnNames;
+                    cmd.Parameters.Add(new SqlParameter("@LandingTargetTableSchema", SqlDbType.NVarChar, -1)).Value = LandingTablestr[0].ToString();
+                    cmd.Parameters.Add(new SqlParameter("@LandingTargetTable", SqlDbType.NVarChar, -1)).Value = LandingTablestr[1].ToString();
+                    cmd.Parameters.Add(new SqlParameter("@TargetTable", SqlDbType.NVarChar, -1)).Value = TargetTable;
+                    cmd.Parameters.Add(new SqlParameter("@HighWaterMarkColumn", SqlDbType.NVarChar, -1)).Value = HighWaterMarkColumn;
+                    cmd.Parameters.Add(new SqlParameter("@AutoIdentityColumn", SqlDbType.NVarChar, -1)).Value = AutoIdentityColumn;
+                    cmd.Parameters.Add(new SqlParameter("@KeyColumns", SqlDbType.NVarChar, -1)).Value = KeyColumns;
+                    cmd.Parameters.Add(new SqlParameter("@DataLoadType", SqlDbType.VarChar, -1)).Value = DataLoadType;
                     //cmd.Parameters.Add(new SqlParameter("@LandingTargetQuery", SqlDbType.NVarChar)).Value = LandingTargetQuery;
                     //cmd.Parameters.Add(new SqlParameter("@TargetQuery", SqlDbType.NVarChar)).Value = TargetQuery;
                     cmd.ExecuteNonQuery();

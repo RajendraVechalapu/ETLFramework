@@ -50,7 +50,7 @@ namespace BIFramework
         public static string fetch_tablename_if_exists = "select 1 TblCnt from INFORMATION_SCHEMA.TABLES where '['+TABLE_SCHEMA + '].[' + TABLE_NAME +']'='{0}'";
 
         public static string fetch_DataLoadDetails= "SELECT [ID]      ,[SourceServer]   ,  SourceDatabase ,[SourceTable]      ,[SourceQuery]" +
-            "  ,SourceTableColumnNames    ,[LandingTargetTable]      ,[TargetTable]      ,[DataLoadType]      ,[HighWaterMarkColumn]" +
+            "  ,SourceTableColumnNames    ,[LandingTargetTableSchema],[LandingTargetTable]      ,[TargetTable]      ,[DataLoadType]      ,[HighWaterMarkColumn]" +
             "      ,[AutoIdentityColumn]      ,[KeyColumns]  FROM [ETL].[SourceTablesDataLoadDetails] ";
 
         public static string fecth_SourceTableColumns = "spr_fetch_TableQuery";
@@ -206,7 +206,7 @@ namespace BIFramework
             //Adding Default columns
             sb.AppendLine("ALTER TABLE "+ tableName + " ADD CreatedAsAt DATETIME NOT NULL DEFAULT (GETDATE())");
             sb.AppendLine("ALTER TABLE "+ tableName + " ADD ModifiedAsAt DATETIME NOT NULL DEFAULT (GETDATE())");
-            sb.AppendLine("ALTER TABLE "+ tableName + " ADD ETLBatchLogId INT NULL");
+            sb.AppendLine("ALTER TABLE "+ tableName + " ADD BatchID INT NULL");
 
             return  sb.ToString();
         }
@@ -276,13 +276,11 @@ namespace BIFramework
             }
         }
         public static void InsertUpdateDataLoadTable(string SourceTable, string SourceQuery, string LandingTargetTable, string TargetTable,
-            string HighWaterMarkColumn, string AutoIdentityColumn, string KeyColumns, string SourceTableColumnNames)
+            string HighWaterMarkColumn, string AutoIdentityColumn, string KeyColumns, string DataLoadType,string SourceTableColumnNames)
         {
 
-
             BaseDataAccess bd = new BaseDataAccess(target_sql_db_etlframework);
-            bd.InsertUpdateSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable, SourceQuery, LandingTargetTable, TargetTable, "", HighWaterMarkColumn, AutoIdentityColumn, KeyColumns, SourceTableColumnNames,SQLHelper.target_connectionString_etlframework);
-
+            bd.InsertUpdateSourceDataLoadDetails(source_sql_server, source_sql_db, SourceTable, SourceQuery, LandingTargetTable, TargetTable, HighWaterMarkColumn, AutoIdentityColumn, KeyColumns, SourceTableColumnNames,DataLoadType,SQLHelper.target_connectionString_etlframework);
         }
 
         public static void executeTargetTableScripts(string LandingTableScript,string TargetTableScript)
