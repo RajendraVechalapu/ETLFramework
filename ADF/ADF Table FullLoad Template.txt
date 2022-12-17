@@ -1,0 +1,157 @@
+{
+    "name": "Copy Data From tblEmployee",
+    "properties": {
+        "activities": [
+            {
+                "name": "Copy Data To Landing Table",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "SourceColumns",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "SqlServerSource",
+                        "sqlReaderQuery": {
+                            "value": "SELECT\n\n@{variables('SourceTableColumns')}, \n@{variables('BatchID')} BatchID \n\nfrom @{variables('SourceTable')}",
+                            "type": "Expression"
+                        },
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None"
+                    },
+                    "sink": {
+                        "type": "AzureSqlSink",
+                        "preCopyScript": "truncate table [dbo].[LandingtblEmployee]",
+                        "writeBehavior": "insert",
+                        "sqlWriterUseTableLock": false,
+                        "disableMetricsCollection": false
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "onpremdataset",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "AzureSqlTable1",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "SchemaName": "dbo",
+                            "TableName": "LandingtblEmployee"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "Lookup1",
+                "type": "Lookup",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "AzureSqlSource",
+                        "sqlReaderQuery": {
+                            "value": "SELECT \n      [SourceTable]\n      ,[SourceTableColumnNames]\n      ,[LandingTargetTable]\n      ,[TargetTable]\n      ,[HighWaterMarkColumn]\n      ,[DataLoadType]\n      ,[HighWaterMarkValue]\n  FROM [ETL].[SourceTablesDataLoadDetails]\n  WHERE SourceTable='@{pipeline().parameters.SourceTable}'",
+                            "type": "Expression"
+                        },
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None"
+                    },
+                    "dataset": {
+                        "referenceName": "AzureSqlTable2",
+                        "type": "DatasetReference"
+                    }
+                }
+            },
+            {
+                "name": "SourceColumns",
+                "type": "SetVariable",
+                "dependsOn": [
+                    {
+                        "activity": "SourceTable",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "variableName": "SourceTableColumns",
+                    "value": {
+                        "value": "@activity('Lookup1').output.firstRow.SourceTableColumnNames\r\n",
+                        "type": "Expression"
+                    }
+                }
+            },
+            {
+                "name": "SourceTable",
+                "type": "SetVariable",
+                "dependsOn": [
+                    {
+                        "activity": "Lookup1",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "variableName": "SourceTable",
+                    "value": {
+                        "value": "@activity('Lookup1').output.firstRow.SourceTable\n",
+                        "type": "Expression"
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "SourceTable": {
+                "type": "string",
+                "defaultValue": "[dbo].[tblEmployee]"
+            }
+        },
+        "variables": {
+            "BatchID": {
+                "type": "String",
+                "defaultValue": "1"
+            },
+            "SourceTableColumns": {
+                "type": "String"
+            },
+            "SourceTable": {
+                "type": "String"
+            }
+        },
+        "annotations": []
+    }
+}

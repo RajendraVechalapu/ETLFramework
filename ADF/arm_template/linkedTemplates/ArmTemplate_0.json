@@ -1,0 +1,574 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name",
+            "defaultValue": "rajadf2022"
+        },
+        "Azure_SQLDB_ETLFramework_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'Azure_SQLDB_ETLFramework'"
+        },
+        "Azure_SQLDB_azadw_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'Azure_SQLDB_azadw'"
+        },
+        "onprem_SQLDB_AdventureWorks2019_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'onprem_SQLDB_AdventureWorks2019'"
+        },
+        "SqlServeronpremsourcedb_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'SqlServeronpremsourcedb'"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/Azure_SQLDB_ETLFramework')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureSqlDatabase",
+                "typeProperties": {
+                    "connectionString": "[parameters('Azure_SQLDB_ETLFramework_connectionString')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/Azure_SQLDB_azadw')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureSqlDatabase",
+                "typeProperties": {
+                    "connectionString": "[parameters('Azure_SQLDB_azadw_connectionString')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/rajintegrationRuntime1')]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "SelfHosted",
+                "typeProperties": {}
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "Azure_SQLDB_azadw",
+                    "type": "LinkedServiceReference"
+                },
+                "parameters": {
+                    "SchemaName": {
+                        "type": "string"
+                    },
+                    "TableName": {
+                        "type": "string"
+                    }
+                },
+                "annotations": [],
+                "type": "AzureSqlTable",
+                "schema": [],
+                "typeProperties": {
+                    "schema": {
+                        "value": "@dataset().SchemaName",
+                        "type": "Expression"
+                    },
+                    "table": {
+                        "value": "@dataset().TableName",
+                        "type": "Expression"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/Azure_SQLDB_azadw')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "Azure_SQLDB_ETLFramework",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureSqlTable",
+                "schema": [],
+                "typeProperties": {}
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/Azure_SQLDB_ETLFramework')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/onprem_SQLDB_AdventureWorks2019')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "SqlServer",
+                "typeProperties": {
+                    "connectionString": "[parameters('onprem_SQLDB_AdventureWorks2019_connectionString')]"
+                },
+                "connectVia": {
+                    "referenceName": "rajintegrationRuntime1",
+                    "type": "IntegrationRuntimeReference"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/rajintegrationRuntime1')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/SqlServeronpremsourcedb')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "SqlServer",
+                "typeProperties": {
+                    "connectionString": "[parameters('SqlServeronpremsourcedb_connectionString')]"
+                },
+                "connectVia": {
+                    "referenceName": "rajintegrationRuntime1",
+                    "type": "IntegrationRuntimeReference"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/rajintegrationRuntime1')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/onpremdataset')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "SqlServeronpremsourcedb",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "SqlServerTable",
+                "schema": [],
+                "typeProperties": {}
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/SqlServeronpremsourcedb')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/Copy Data From tblEmployee')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Data To Landing Table",
+                        "type": "Copy",
+                        "dependsOn": [
+                            {
+                                "activity": "LandingTargetTableSchema",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "SqlServerSource",
+                                "sqlReaderQuery": {
+                                    "value": "SELECT\n\n@{variables('SourceTableColumns')}, \n@{variables('BatchID')} BatchID \n\nfrom @{variables('SourceTable')}",
+                                    "type": "Expression"
+                                },
+                                "queryTimeout": "02:00:00",
+                                "partitionOption": "None"
+                            },
+                            "sink": {
+                                "type": "AzureSqlSink",
+                                "preCopyScript": {
+                                    "value": "truncate table\n\n@{variables('TargetLandingTableSchema')}. \n@{variables('TargetLandingTable')} \n\n",
+                                    "type": "Expression"
+                                },
+                                "writeBehavior": "insert",
+                                "sqlWriterUseTableLock": false,
+                                "disableMetricsCollection": false
+                            },
+                            "enableStaging": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "onpremdataset",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "AzureSqlTable1",
+                                "type": "DatasetReference",
+                                "parameters": {
+                                    "SchemaName": {
+                                        "value": "@variables('TargetLandingTableSchema')",
+                                        "type": "Expression"
+                                    },
+                                    "TableName": {
+                                        "value": "@variables('TargetLandingTable')",
+                                        "type": "Expression"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Lookup1",
+                        "type": "Lookup",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "AzureSqlSource",
+                                "sqlReaderQuery": {
+                                    "value": "SELECT \n      [SourceTable]\n      ,[SourceTableColumnNames]\n      ,LandingTargetTableSchema\n      ,[LandingTargetTable]\n      ,[TargetTable]\n      ,[HighWaterMarkColumn]\n      ,[DataLoadType]\n      ,[HighWaterMarkValue]\n  FROM [ETL].[SourceTablesDataLoadDetails]\n  WHERE SourceTable='@{pipeline().parameters.SourceTable}'",
+                                    "type": "Expression"
+                                },
+                                "queryTimeout": "02:00:00",
+                                "partitionOption": "None"
+                            },
+                            "dataset": {
+                                "referenceName": "AzureSqlTable2",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        }
+                    },
+                    {
+                        "name": "SourceColumns",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "SourceTable",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "SourceTableColumns",
+                            "value": {
+                                "value": "@activity('Lookup1').output.firstRow.SourceTableColumnNames\r\n",
+                                "type": "Expression"
+                            }
+                        }
+                    },
+                    {
+                        "name": "SourceTable",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "Lookup1",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "SourceTable",
+                            "value": {
+                                "value": "@activity('Lookup1').output.firstRow.SourceTable\n",
+                                "type": "Expression"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LandingTargetTable",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "SourceColumns",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "TargetLandingTable",
+                            "value": {
+                                "value": "@activity('Lookup1').output.firstRow.LandingTargetTable\n",
+                                "type": "Expression"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LandingTargetTableSchema",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "LandingTargetTable",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "TargetLandingTableSchema",
+                            "value": {
+                                "value": "@activity('Lookup1').output.firstRow.LandingTargetTableSchema\n",
+                                "type": "Expression"
+                            }
+                        }
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "parameters": {
+                    "SourceTable": {
+                        "type": "string",
+                        "defaultValue": "[[dbo].[tblEmployee]"
+                    }
+                },
+                "variables": {
+                    "BatchID": {
+                        "type": "String",
+                        "defaultValue": "1"
+                    },
+                    "SourceTableColumns": {
+                        "type": "String"
+                    },
+                    "SourceTable": {
+                        "type": "String"
+                    },
+                    "TargetLandingTable": {
+                        "type": "String"
+                    },
+                    "TargetLandingTableSchema": {
+                        "type": "String"
+                    }
+                },
+                "annotations": [],
+                "lastPublishTime": "2022-12-17T00:29:00Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/onpremdataset')]",
+                "[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
+                "[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/Copy Data From tblEmployee_copy1')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Data To Landing Table",
+                        "type": "Copy",
+                        "dependsOn": [
+                            {
+                                "activity": "SourceColumns",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "SqlServerSource",
+                                "sqlReaderQuery": {
+                                    "value": "SELECT\n\n@{variables('SourceTableColumns')}, \n@{variables('BatchID')} BatchID \n\nfrom @{variables('SourceTable')}",
+                                    "type": "Expression"
+                                },
+                                "queryTimeout": "02:00:00",
+                                "partitionOption": "None"
+                            },
+                            "sink": {
+                                "type": "AzureSqlSink",
+                                "preCopyScript": "truncate table [dbo].[LandingtblEmployee]",
+                                "writeBehavior": "insert",
+                                "sqlWriterUseTableLock": false,
+                                "disableMetricsCollection": false
+                            },
+                            "enableStaging": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "onpremdataset",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "AzureSqlTable1",
+                                "type": "DatasetReference",
+                                "parameters": {
+                                    "SchemaName": "dbo",
+                                    "TableName": "LandingtblEmployee"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Lookup1",
+                        "type": "Lookup",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "AzureSqlSource",
+                                "sqlReaderQuery": {
+                                    "value": "SELECT \n      [SourceTable]\n      ,[SourceTableColumnNames]\n      ,[LandingTargetTable]\n      ,[TargetTable]\n      ,[HighWaterMarkColumn]\n      ,[DataLoadType]\n      ,[HighWaterMarkValue]\n  FROM [ETL].[SourceTablesDataLoadDetails]\n  WHERE SourceTable='@{pipeline().parameters.SourceTable}'",
+                                    "type": "Expression"
+                                },
+                                "queryTimeout": "02:00:00",
+                                "partitionOption": "None"
+                            },
+                            "dataset": {
+                                "referenceName": "AzureSqlTable2",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        }
+                    },
+                    {
+                        "name": "SourceColumns",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "SourceTable",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "SourceTableColumns",
+                            "value": {
+                                "value": "@activity('Lookup1').output.firstRow.SourceTableColumnNames\r\n",
+                                "type": "Expression"
+                            }
+                        }
+                    },
+                    {
+                        "name": "SourceTable",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "Lookup1",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "SourceTable",
+                            "value": {
+                                "value": "@activity('Lookup1').output.firstRow.SourceTable\n",
+                                "type": "Expression"
+                            }
+                        }
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "parameters": {
+                    "SourceTable": {
+                        "type": "string",
+                        "defaultValue": "[[dbo].[tblEmployee]"
+                    }
+                },
+                "variables": {
+                    "BatchID": {
+                        "type": "String",
+                        "defaultValue": "1"
+                    },
+                    "SourceTableColumns": {
+                        "type": "String"
+                    },
+                    "SourceTable": {
+                        "type": "String"
+                    }
+                },
+                "annotations": [],
+                "lastPublishTime": "2022-12-17T00:29:00Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/onpremdataset')]",
+                "[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
+                "[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]"
+            ]
+        }
+    ]
+}

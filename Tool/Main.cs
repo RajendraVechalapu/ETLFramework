@@ -110,7 +110,7 @@ namespace SQL_Perf_Light
             {
                 SQLHelper.InitializeIcons();
                 InitialPageLoadwithAllData();
-                fetch_DataLoadDetails(nodetextselect);
+                fetch_DataLoadDetails("");
             }
             catch (Exception ex)
             {
@@ -234,25 +234,34 @@ namespace SQL_Perf_Light
             }
         }
       
-        string selectedOption = "";
+        
         int nodeLevelSelected = 0;
-        string nodetextselect = "";
-
+        
         private void treeViewSQL_AfterSelect(object sender, TreeViewEventArgs e)
         {
             ShowStatusChildForm();
 
             nodeLevelSelected = e.Node.Level;
-            selectedOption = e.Node.Text;
+           string selectedOption = e.Node.Text;
             
-            txtSourceTable.Text = selectedOption;
+            GenerateTablesSchemaCreationScript(selectedOption);
+
+            if (obj != null)
+            {
+                obj.Close();
+            }
+
+        }
+        private void GenerateTablesSchemaCreationScript(string TableName)
+        {
+            txtSourceTable.Text = TableName;
             txtLandingTargetTable.Text = txtSourceTable.Text.Replace(".[", ".[Landing");
             txtTargetTable.Text = txtSourceTable.Text;
 
             fetch_TableColumns();
-            fetch_DataLoadDetails(selectedOption);
+            fetch_DataLoadDetails(TableName);
 
-            if (grdViewDataLoadDetails.Rows.Count <=0)
+            if (grdViewDataLoadDetails.Rows.Count <= 0)
             {
                 btnTargetTablesCreate.Enabled = false;
 
@@ -262,24 +271,16 @@ namespace SQL_Perf_Light
                 btnTargetTablesCreate.Enabled = true;
             }
 
-            string script =   SQLHelper.GenerateTableScript(txtSourceTable.Text);
-
-            
+            string script = SQLHelper.GenerateTableScript(TableName);
 
             //script = "--Script Created ";
-            script = script + Environment.NewLine ;
+            script = script + Environment.NewLine;
 
             txtTargetTableScript.Text = script;
 
-            script=script.Replace(".[", ".[Landing");
+            script = script.Replace(".[", ".[Landing");
 
             txtLandingTableScript.Text = script; ;
-
-            if (obj != null)
-            {
-                obj.Close();
-            }
-
         }
         private void fillGridColumnWidth(DataGridView dgv)
         {
@@ -314,7 +315,10 @@ namespace SQL_Perf_Light
             //dgv.AutoResizeColumns();
 
         }
-        void fetch_DataLoadDetails(string nodetextselect) {
+      private DataSet fetch_DataLoadDetails(string nodetextselect) {
+
+            DataSet ds=null;
+
                         try
                         {
                             nodetextselect = nodetextselect.Replace("[", "");
@@ -325,7 +329,7 @@ namespace SQL_Perf_Light
                             {
                                 query = SQLHelper.fetch_DataLoadDetails;
                             }
-                            DataSet ds = SQLHelper.getDataSet(query, SQLHelper.target_connectionString_etlframework);
+                            ds = SQLHelper.getDataSet(query, SQLHelper.target_connectionString_etlframework);
                             dataLoadGrdiview(ds);
                
                                 
@@ -334,6 +338,8 @@ namespace SQL_Perf_Light
                         {
                             MessageBox.Show(ex.Message);
                         }
+
+            return ds;
                
         }
 
@@ -391,6 +397,8 @@ namespace SQL_Perf_Light
                 txtKeyColumns.Text = "";
                 txtWatermarkColumn.Text = "";
                 txtIdentityColumn.Text = "";
+                txtLoadType.Text = "FullLoad";
+
                 foreach (DataRow row in ds2.Tables[0].Rows)
                 {
                     string columnname= row["ColumnName"].ToString();
@@ -403,7 +411,9 @@ namespace SQL_Perf_Light
                     if (CONSTRAINT_TYPE == "timestamp")
                     {
                         txtWatermarkColumn.Text = "[" + columnname + "]";
+                        txtLoadType.Text = "Incremental";
                     }
+                    
                     if (CONSTRAINT_TYPE == "Identity")
                     {
                         txtIdentityColumn.Text = "[" + columnname + "]";
@@ -486,17 +496,19 @@ namespace SQL_Perf_Light
         private void btnInsertUpdate_Click(object sender, EventArgs e)
         {
             SQLHelper.InsertUpdateDataLoadTable(txtSourceTable.Text, txtSourceQuery.Text, 
-                txtLandingTargetTable.Text, txtTargetTable.Text, txtWatermarkColumn.Text, txtIdentityColumn.Text, txtKeyColumns.Text,txtSourceTableColumnNames.Text );
+                txtLandingTargetTable.Text, txtTargetTable.Text, txtWatermarkColumn.Text, txtIdentityColumn.Text, txtKeyColumns.Text,txtLoadType.Text,txtSourceTableColumnNames.Text);
             try
             {
                // InitialPageLoadwithAllData();
-                fetch_DataLoadDetails(nodetextselect);
+                fetch_DataLoadDetails(txtSourceTable.Text);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             btnTargetTablesCreate.Enabled = true;
+
+            lblMessage.Text = "Successfully updated: " + DateTime.Now.ToString(); ;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -510,7 +522,7 @@ namespace SQL_Perf_Light
             try
             {
                 //InitialPageLoadwithAllData();
-                fetch_DataLoadDetails(nodetextselect);
+                fetch_DataLoadDetails(txtSourceTable.Text);
             }
             catch (Exception ex)
             {
@@ -526,21 +538,57 @@ namespace SQL_Perf_Light
 
         private void btnTargetTablesCreate_Click(object sender, EventArgs e)
         {
+            ShowStatusChildForm();
+            DataSet ds=fetch_DataLoadDetails("");
+
             try
             {
-                SQLHelper.executeTargetTableScripts(txtLandingTableScript.Text, txtTargetTableScript.Text);
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    string sourceTable = row["SourceTable"].ToString();
 
-                lblMessage.Text="Successfully Created.";
+                    string script = SQLHelper.GenerateTableScript(sourceTable);
+
+                    //script = "--Script Created ";
+                    string targetTableScript = script + Environment.NewLine;
+
+                    string LandingTableScript = script.Replace(".[", ".[Landing");
+
+                    SQLHelper.executeTargetTableScripts(LandingTableScript, targetTableScript);
+
+                 //   MessageBox.Show(script);
+
+                }
+                //{
+                //    string sourceTable = grdViewDataLoadDetails.Rows[i].Cells["SourceTable"].Value.ToString();
+                //    MessageBox.Show(sourceTable);
+                //    //GenerateTablesSchemaCreationScript(sourceTable);
+
+                //   // SQLHelper.executeTargetTableScripts(txtLandingTableScript.Text, txtTargetTableScript.Text);
+                //}
+
+
+                MessageBox.Show("Total Tables ("+ grdViewDataLoadDetails.Rows.Count .ToString()+ "), Successfully Created at " + DateTime.Now.ToString());
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+
+            if (obj != null)
+            {
+                obj.Close();
             }
         }
 
         private void label10_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            fetch_DataLoadDetails("");
         }
     }
 

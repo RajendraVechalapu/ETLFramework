@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BIFramework-allinone", "BIFramework-allinone.csproj", "{8ACDB24D-C38C-45FE-AE04-581726C8449E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI Tool", "UI Tool.csproj", "{8ACDB24D-C38C-45FE-AE04-581726C8449E}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "BIFramework", "..\BIFramework\BIFramework.sqlproj", "{6C09F283-4192-4C11-88E9-D8F3D390E108}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,12 @@ Global
 		{8ACDB24D-C38C-45FE-AE04-581726C8449E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ACDB24D-C38C-45FE-AE04-581726C8449E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ACDB24D-C38C-45FE-AE04-581726C8449E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C09F283-4192-4C11-88E9-D8F3D390E108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C09F283-4192-4C11-88E9-D8F3D390E108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C09F283-4192-4C11-88E9-D8F3D390E108}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6C09F283-4192-4C11-88E9-D8F3D390E108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C09F283-4192-4C11-88E9-D8F3D390E108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C09F283-4192-4C11-88E9-D8F3D390E108}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
